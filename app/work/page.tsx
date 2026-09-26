@@ -35,6 +35,16 @@ const work = [
     fit: "contain" as const,
     position: "center 30%",
   },
+  {
+    number: "004",
+    title: "KAYCLO",
+    type: "Womenswear / Campaign content",
+    summary: "The Mix Match Collection: fitted lounge sets, coordinated silhouettes and portrait studies in butter yellow, cocoa and soft pink.",
+    image: "/assets/project-kayclo-collection.webp",
+    alt: "KAYCLO Mix Match Collection showing three coordinated looks in butter yellow, cocoa and soft pink",
+    fit: "contain" as const,
+    position: "center center",
+  },
 ];
 
 export default function WorkPage() {

@@ -20,7 +20,7 @@ type ProjectItem = {
   title: string;
   type: string;
   note: string;
-  layout: "anagen" | "vonne" | "piebar";
+  layout: "anagen" | "vonne" | "piebar" | "kayclo";
   images: ProjectImage[];
 };
 
@@ -28,6 +28,10 @@ const heroTopFrames: HeroFrame[] = [
   {
     image: "/assets/project-anagen-textures.webp",
     alt: "Anagen Paris Hair Serum framed by different hair textures",
+  },
+  {
+    image: "/assets/project-kayclo-butter.webp",
+    alt: "KAYCLO butter-yellow lounge set, with portrait and full-length styling",
   },
   {
     image: "/assets/project-vonne-campaign-board.webp",
@@ -40,6 +44,10 @@ const heroTopFrames: HeroFrame[] = [
   {
     image: "/assets/project-vonne-car.webp",
     alt: "Orange Vonne X2X bikini styled against a silver car",
+  },
+  {
+    image: "/assets/project-kayclo-collection.webp",
+    alt: "KAYCLO Mix Match Collection in butter yellow, cocoa and soft pink",
   },
   {
     image: "/assets/project-vonne-fur-bag.webp",
@@ -57,6 +65,10 @@ const heroBottomFrames: HeroFrame[] = [
     alt: "Two models presenting Pie Bar juice bottles",
   },
   {
+    image: "/assets/project-kayclo-cocoa.webp",
+    alt: "KAYCLO cocoa lounge set shown from the front and back",
+  },
+  {
     image: "/assets/project-anagen-group.webp",
     alt: "Three models presenting Anagen Paris Hair Serum",
   },
@@ -72,6 +84,16 @@ const heroBottomFrames: HeroFrame[] = [
     image: "/assets/project-anagen-flatlay.webp",
     alt: "Anagen Paris Hair Serum product flat lay",
   },
+];
+
+// Alternate brands across the desktop strip; each campaign image appears once
+// before the seamless repeat. Mobile keeps two independent opposing rows.
+const heroDesktopFrames = [
+  heroTopFrames[0], heroTopFrames[1], heroTopFrames[4],
+  heroBottomFrames[0], heroBottomFrames[2], heroBottomFrames[1],
+  heroTopFrames[2], heroTopFrames[3], heroBottomFrames[3],
+  heroTopFrames[5], heroBottomFrames[4], heroTopFrames[6],
+  heroBottomFrames[5], heroTopFrames[7],
 ];
 
 const projects: ProjectItem[] = [
@@ -111,6 +133,18 @@ const projects: ProjectItem[] = [
       { image: "/assets/project-piebar-duo.webp", alt: "Two models presenting Pie Bar juice bottles", position: "center 30%" },
       { image: "/assets/project-piebar-product.webp", alt: "Model presenting a Pie Bar juice bottle" },
       { image: "/assets/project-piebar-bottles.webp", alt: "Model holding two Pie Bar juice flavours" },
+    ],
+  },
+  {
+    number: "04",
+    title: "KAYCLO",
+    type: "Womenswear / Campaign content",
+    note: "The Mix Match Collection. Fitted lounge sets in butter yellow, cocoa and soft pink.",
+    layout: "kayclo",
+    images: [
+      { image: "/assets/project-kayclo-collection.webp", alt: "Three looks from KAYCLO’s Mix Match Collection in butter yellow, cocoa and soft pink" },
+      { image: "/assets/project-kayclo-cocoa.webp", alt: "KAYCLO cocoa co-ord with a long-sleeved top and flared trousers, shown front and back" },
+      { image: "/assets/project-kayclo-butter.webp", alt: "KAYCLO butter-yellow co-ord shown in a seated portrait and full-length look" },
     ],
   },
 ];
@@ -164,6 +198,9 @@ const imageSizes: Record<string, [number, number]> = {
   "project-piebar-duo.webp": [1024, 1280],
   "project-piebar-product.webp": [1024, 1280],
   "project-piebar-bottles.webp": [1024, 1280],
+  "project-kayclo-cocoa.webp": [1080, 1350],
+  "project-kayclo-butter.webp": [1080, 1350],
+  "project-kayclo-collection.webp": [1080, 1350],
 };
 
 function dimensions(image: string) {
@@ -407,7 +444,7 @@ export function ReferenceLedHome() {
         <div className="rl-hero__topline"><span>Creative Pie / Lagos + worldwide</span><span>Social-first creative agency</span></div>
         <div className="rl-hero__canvas">
           <div className="rl-hero__media-field" aria-label="Moving selection of Creative Pie campaign media">
-            <HeroMediaRow frames={[heroTopFrames[0], heroTopFrames[3], heroBottomFrames[0], heroBottomFrames[1], heroTopFrames[1], heroTopFrames[2], heroBottomFrames[2], heroBottomFrames[3], heroTopFrames[4], heroBottomFrames[4], heroTopFrames[5]]} desktop />
+            <HeroMediaRow frames={heroDesktopFrames} desktop />
             <HeroMediaRow frames={heroTopFrames} />
             <HeroMediaRow frames={heroBottomFrames} reverse />
           </div>
@@ -442,7 +479,7 @@ export function ReferenceLedHome() {
           onFocusCapture={(event) => { if (event.target instanceof HTMLElement && event.target.matches(":focus-visible")) setKeyboardReading(true); }}
           onBlurCapture={(event) => { if (!event.currentTarget.contains(event.relatedTarget as Node)) setKeyboardReading(false); }}>
           <div className="rl-work__toolbar">
-            <div className="rl-work__board" aria-label="Choose a project">
+            <div className="rl-work__board" aria-label="Choose a project" style={{ "--project-count": projects.length } as CSSProperties}>
               {projects.map((item, index) => (
                 <button key={item.number} type="button" className={index === workIndex ? "is-active" : ""} onClick={() => selectProject(index)} aria-pressed={index === workIndex} aria-controls="rl-project-spread">
                   <span>{item.number}</span><b>{item.title}</b>
@@ -478,7 +515,7 @@ export function ReferenceLedHome() {
               </div>
               <CampaignCollage project={activeWork} reduced={Boolean(reducedMotion)} />
             </motion.article>
-            <div className="rl-work__folio"><span>{activeWork.title} / Campaign collection</span><span>{activeWork.number} / 03</span></div>
+            <div className="rl-work__folio"><span>{activeWork.title} / {activeWork.layout === "kayclo" ? "Mix Match Collection" : "Campaign collection"}</span><span>{activeWork.number} / {String(projects.length).padStart(2, "0")}</span></div>
           </div>
         </div>
 
