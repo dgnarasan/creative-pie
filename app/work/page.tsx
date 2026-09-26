@@ -1,8 +1,8 @@
-import type { Metadata } from "next";
+import { pageMetadata } from "../seo";
 import { DirectImage } from "../direct-image";
 import { SmartLink } from "../site-chrome";
 
-export const metadata: Metadata = { title: "Work", description: "Selected Creative Pie campaign work across beauty, fashion and drinks.", alternates: { canonical: "/work" } };
+export const metadata = pageMetadata('Selected Work', 'Explore Creative Pie campaigns for Anagen Paris, Vonne X2X, Pie Bar and KAYCLO across beauty, fashion and drinks.', "/work");
 
 const work = [
   {

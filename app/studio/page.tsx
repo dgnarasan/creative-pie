@@ -1,8 +1,8 @@
-import type { Metadata } from "next";
+import { pageMetadata } from "../seo";
 import { DirectImage } from "../direct-image";
 import { SmartLink } from "../site-chrome";
 
-export const metadata: Metadata = { title: "Studio", description: "About Creative Pie.", alternates: { canonical: "/studio" } };
+export const metadata = pageMetadata('About the Studio', 'Meet Creative Pie, a full-service, social-first creative agency based in Lagos and working with brands worldwide.', "/studio");
 
 export default function StudioPage() {
   return (

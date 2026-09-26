@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { contactLabel, contactUrl } from "./contact-details";
 import { usePathname, useRouter } from "next/navigation";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import {
@@ -271,7 +272,7 @@ function Header() {
             <motion.div className="site-index__foot" variants={{
               closed: { opacity: 0, transition: { duration: reducedMotion ? 0 : .12 } },
               open: { opacity: 1, transition: { duration: reducedMotion ? 0 : .45, delay: reducedMotion ? 0 : .62 } },
-            }}><a href="mailto:hello@creativepie.studio">hello@creativepie.studio</a><p>Lagos / Working worldwide</p><span>© 2026</span></motion.div>
+            }}><a href={contactUrl} target="_blank" rel="noopener noreferrer">{contactLabel}</a><p>Lagos / Working worldwide</p><span>© 2026</span></motion.div>
           </motion.div>
         )}
       </AnimatePresence>
@@ -289,7 +290,7 @@ function Footer() {
       <div className="footer-wordmark" aria-label="Creative Pie">CREATIVE PIE</div>
       <div className="footer-grid">
         <div><BrandMark /></div>
-        <div><span>Enquiries</span><a href="mailto:hello@creativepie.studio">hello@creativepie.studio</a></div>
+        <div><span>Enquiries</span><a href={contactUrl} target="_blank" rel="noopener noreferrer">{contactLabel}</a></div>
         <div><span>Base</span><p>Lagos, Nigeria<br />Working worldwide</p></div>
         <div><span>Index</span><SmartLink href="/work">Work</SmartLink><SmartLink href="/capabilities">Services</SmartLink><SmartLink href="/studio">Studio</SmartLink><SmartLink href="/privacy">Privacy</SmartLink></div>
       </div>
@@ -299,9 +300,10 @@ function Footer() {
 }
 
 export function ContactForm() {
-  const [draftReady, setDraftReady] = useState(false);
+  const [draft, setDraft] = useState("");
+  const [copied, setCopied] = useState(false);
 
-  function submit(event: FormEvent<HTMLFormElement>) {
+  async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
     const subject = `Creative Pie enquiry — ${String(data.get("name") || "New project")}`;
@@ -312,8 +314,15 @@ export function ContactForm() {
       "",
       String(data.get("brief") || ""),
     ].join("\n");
-    setDraftReady(true);
-    window.location.href = `mailto:hello@creativepie.studio?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+    const message = `${subject}\n\n${body}`;
+    setDraft(message);
+    setCopied(false);
+    try {
+      await navigator.clipboard.writeText(message);
+      setCopied(true);
+    } catch {
+      // The visible draft remains available when clipboard access is unavailable.
+    }
   }
 
   return (
@@ -322,9 +331,13 @@ export function ContactForm() {
       <label><span>02 / Email</span><input name="email" required type="email" placeholder="you@company.com" /></label>
       <label><span>03 / What are we making?</span><select name="service" defaultValue=""><option value="" disabled>Choose a starting point</option><option>Branding</option><option>Content Creation + SMM</option><option>Website + digital experience</option><option>Creative partnership</option><option>Something else</option></select></label>
       <label><span>04 / The brief</span><textarea name="brief" rows={5} required placeholder="The ambition, the problem, the timing…" /></label>
-      <button type="submit">Prepare enquiry <i>↗︎</i></button>
-      <p>This prepares an email in your own mail app. Nothing is sent until you review and send it.</p>
-      {draftReady && <p role="status">Your enquiry draft is ready.</p>}
+      <button type="submit">Copy your brief <i>↗︎</i></button>
+      <p>Copy your brief, then paste it into a message to {contactLabel} on Instagram. This form does not send or store your details.</p>
+      {draft && <div className="contact-draft">
+        <p role="status">{copied ? "Brief copied. Open Instagram and paste it into a message." : "Your brief is ready. Select and copy the text below, then send it on Instagram."}</p>
+        <label><span>Your message</span><textarea aria-label="Your enquiry draft" readOnly rows={7} value={draft} onFocus={(event) => event.currentTarget.select()} /></label>
+        <a className="section-link" href={contactUrl} target="_blank" rel="noopener noreferrer">Open Instagram <i>↗︎</i></a>
+      </div>}
     </form>
   );
 }

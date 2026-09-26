@@ -1,5 +1,7 @@
 "use client";
 
+import { contactLabel, contactUrl } from "./contact-details";
+
 import { useEffect, useRef, useState, type CSSProperties } from "react";
 import { motion, useInView, useMotionValue, useReducedMotion } from "framer-motion";
 import { SmartLink } from "./site-chrome";
@@ -577,7 +579,7 @@ export function ReferenceLedHome() {
         <span className="rl-label">05 / Contact</span>
         <h2 id="rl-contact-title">Tell us about<br />the project.</h2>
         <SmartLink href="/contact">Start a project <i>↗︎</i></SmartLink>
-        <div className="rl-contact__details"><span>Lagos / working worldwide</span><span>Creative direction / Content + SMM / Branding / Websites</span><a href="mailto:hello@creativepie.studio">hello@creativepie.studio</a></div>
+        <div className="rl-contact__details"><span>Lagos / working worldwide</span><span>Creative direction / Content + SMM / Branding / Websites</span><a href={contactUrl} target="_blank" rel="noopener noreferrer">{contactLabel}</a></div>
       </section>
     </div>
   );

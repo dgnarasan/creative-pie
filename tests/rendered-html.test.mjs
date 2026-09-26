@@ -144,3 +144,28 @@ test("publishes crawler support and a real not-found response", async () => {
   assert.equal(missing.status, 404);
   assert.match(await missing.text(), /Missing index/i);
 });
+
+test("publishes branded previews, accurate page metadata and a usable enquiry route", async () => {
+  const worker = await loadWorker();
+  for (const [path] of routes) {
+    const response = await worker.fetch(new Request(`http://localhost${path}`, { headers: { accept: "text/html" } }), env(), ctx);
+    const html = await response.text();
+    assert.match(html, /property="og:image" content="https:\/\/[^\"]+\/og\.png"/);
+    assert.match(html, /name="twitter:card" content="summary_large_image"/);
+    assert.match(html, /property="og:site_name" content="Creative Pie"/);
+    assert.match(html, /rel="apple-touch-icon"/);
+    assert.doesNotMatch(html, /mailto:hello@creativepie\.studio/);
+    assert.doesNotMatch(html, /cp-reference-hero\.webp/);
+    if (path === "/") {
+      assert.match(html, /application\/ld\+json/);
+      assert.match(html, /"@type":"WebSite"/);
+      assert.match(html, /"@type":"Organization"/);
+    } else {
+      assert.ok(html.includes(`property="og:url" content="https://creative-pie-studio.ni-ne-gb-9.chatgpt.site${path}"`), `${path} must have its own share URL`);
+    }
+    if (path === "/contact") {
+      assert.match(html, /Copy your brief/);
+      assert.match(html, /https:\/\/www\.instagram\.com\/creativepie\.co\//);
+    }
+  }
+});

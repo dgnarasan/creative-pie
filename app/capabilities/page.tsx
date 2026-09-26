@@ -1,8 +1,8 @@
-import type { Metadata } from "next";
+import { pageMetadata } from "../seo";
 import { SmartLink } from "../site-chrome";
 import { CapabilitiesAccordion } from "./capabilities-accordion";
 
-export const metadata: Metadata = { title: "Capabilities", description: "Creative Pie capabilities.", alternates: { canonical: "/capabilities" } };
+export const metadata = pageMetadata('Creative Services in Lagos', 'Creative direction, content creation, social media management, branding and website design from Creative Pie. Project, launch and ongoing support.', "/capabilities");
 
 export default function CapabilitiesPage() {
   return (
