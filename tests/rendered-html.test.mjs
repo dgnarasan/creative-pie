@@ -65,7 +65,7 @@ test("renders the reference-led landing with selected campaign work", async () =
   assert.match(html, /project-(?:anagen|vonne|piebar)-[a-z-]+\.webp/i);
   assert.match(html, /project-vonne-campaign-board\.webp/i);
   assert.doesNotMatch(html, /29,086|136,797|Independent since 2024/);
-  assert.match(html, /Pause motion/);
+  assert.doesNotMatch(html, /Pause motion|CP—01/);
   assert.match(html, /cp-studio-bts\.webp/i);
   assert.match(html, /cp-strategy-truck-branded-v3\.webp/i);
   assert.doesNotMatch(html, /four[- ]bag/i);

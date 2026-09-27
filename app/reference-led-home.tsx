@@ -449,7 +449,7 @@ export function ReferenceLedHome() {
             </div>
           </div>
         </div>
-        <div className="rl-hero__base"><span>© 2026</span><span>Scroll to see the work</span><span>CP—01</span></div>
+        <div className="rl-hero__base"><span>© 2026</span><span>Scroll to see the work</span></div>
       </section>
 
       <section className="rl-work" id="work" aria-labelledby="rl-work-title">
@@ -473,7 +473,7 @@ export function ReferenceLedHome() {
             </div>
             <div className="rl-work__controls">
               {!reducedMotion && <button className="rl-work__playback" type="button" onClick={() => { setWorkPaused((current) => !current); setKeyboardReading(false); }} aria-label={workPaused ? "Play project sequence" : "Pause project sequence"}>
-                <span aria-hidden="true">{workPaused ? "▶" : "Ⅱ"}</span>{workPaused ? "Play projects" : "Pause projects"}
+                <svg aria-hidden="true" focusable="false" viewBox="0 0 16 16" width="14" height="14" fill="currentColor">{workPaused ? <path d="M4 2.5v11L13 8z" /> : <><rect x="3" y="2.5" width="3" height="11" /><rect x="10" y="2.5" width="3" height="11" /></>}</svg>{workPaused ? "Play projects" : "Pause projects"}
               </button>}
               <button type="button" onClick={() => selectProject(workIndex - 1)} aria-label="Previous project"><span aria-hidden="true">←</span></button>
               <button type="button" onClick={() => selectProject(workIndex + 1)} aria-label="Next project"><span aria-hidden="true">→</span></button>

@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { MotionPreferences, MotionToggle, useSiteReducedMotion } from "./motion-preference";
+import { MotionPreferences, useSiteReducedMotion } from "./motion-preference";
 import { PrivacyNotice } from "./privacy-notice";
 import { contactLabel, contactUrl } from "./contact-details";
 import { usePathname, useRouter } from "next/navigation";
@@ -220,7 +220,7 @@ function Header() {
               <SmartLink key={href} href={href} aria-current={pathname === href || pathname.startsWith(`${href}/`) ? "page" : undefined}>{label}</SmartLink>
             ))}
           </nav>
-          <div className="header-actions"><MotionToggle />
+          <div className="header-actions">
           <button ref={buttonRef} className="menu-button" type="button" aria-expanded={open} aria-controls="site-index" onClick={() => setOpen(!open)}>
             <span className="sr-only">{open ? "Close menu" : "Open menu"}</span>
             <span className="menu-button__label">{open ? "Close" : "Index"}</span><i aria-hidden="true" /><b aria-hidden="true" />
@@ -311,7 +311,7 @@ function Footer() {
         <div><span>Index</span><SmartLink href="/work">Work</SmartLink><SmartLink href="/capabilities">Services</SmartLink><SmartLink href="/studio">Studio</SmartLink><SmartLink href="/contact">Contact</SmartLink></div>
       </div>
       <nav className="footer-policies" aria-label="Policies"><SmartLink href="/privacy">Privacy policy</SmartLink><SmartLink href="/terms">Terms &amp; conditions</SmartLink><SmartLink href="/cookies">Cookie policy</SmartLink><SmartLink href="/refunds">Refunds &amp; cancellations</SmartLink></nav>
-      <div className="footer-base"><span>© Creative Pie 2026</span><span>Independent creative studio · Lagos, Nigeria</span><span>CP—01</span></div>
+      <div className="footer-base"><span>© Creative Pie 2026</span><span>Independent creative studio · Lagos, Nigeria</span></div>
     </footer>
   );
 }

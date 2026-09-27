@@ -72,7 +72,7 @@
 .rl-work__controls button { display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-width: 46px; min-height: 46px; padding: 10px; border: 1px solid var(--rl-line-dark); background: transparent; font: 400 19px/1 var(--sans); }
 .rl-work__controls button:hover { background: var(--rl-ink); color: var(--rl-paper); }
 .rl-work__controls .rl-work__playback { padding-inline: 12px; font-size: 14px; }
-.rl-work__playback > span { font: 16px/1 Arial,sans-serif; }
+.rl-work__playback > svg { flex: 0 0 14px; }
 .rl-work__book { container-type: inline-size; position: relative; background: #d7d8cb; border: 1px solid var(--rl-line-dark); box-shadow: 0 4px 0 -1px #e3ddd2,0 5px 0 -1px var(--rl-line-dark); touch-action: pan-y; }
 .rl-work__book--vonne { background: #151719; color: #f4f0e8; }
 .rl-work__book--piebar { background: #f36a91; color: #181218; }
