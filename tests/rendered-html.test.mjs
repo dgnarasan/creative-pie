@@ -9,6 +9,9 @@ const routes = [
   ["/studio", /Independent/],
   ["/contact", /Tell us about/],
   ["/privacy", /Privacy/],
+  ["/terms", /Terms.*conditions/is],
+  ["/cookies", /Cookie policy/],
+  ["/refunds", /Refunds.*cancellations/is],
 ];
 
 async function loadWorker() {
@@ -61,8 +64,8 @@ test("renders the reference-led landing with selected campaign work", async () =
   assert.doesNotMatch(html, /rl-tile-reel/i);
   assert.match(html, /project-(?:anagen|vonne|piebar)-[a-z-]+\.webp/i);
   assert.match(html, /project-vonne-campaign-board\.webp/i);
-  assert.match(html, /Creative Pie \/ Channel results/i);
-  assert.match(html, /29,086.*136,797/is);
+  assert.doesNotMatch(html, /29,086|136,797|Independent since 2024/);
+  assert.match(html, /Pause motion/);
   assert.match(html, /cp-studio-bts\.webp/i);
   assert.match(html, /cp-strategy-truck-branded-v3\.webp/i);
   assert.doesNotMatch(html, /four[- ]bag/i);
@@ -90,8 +93,7 @@ test("keeps the active layout isolated and photographs proportional", () => {
   assert.doesNotMatch(globalStyles, /\.rl-[\w-]/, "Homepage rules must live in one stylesheet");
   assert.match(homeStyles, /\.rl-hero-frame img\s*\{[^}]*object-fit: contain/);
   assert.match(homeStyles, /\.rl-work__photo img\s*\{[^}]*width: auto;[^}]*height: auto/);
-  assert.match(home, /View before &amp; after/);
-  assert.match(home, /aria-haspopup="dialog"/);
+  assert.doesNotMatch(home, /rl-performance__dialog|29,086|136,797/);
   assert.match(homeStyles, /prefers-reduced-motion: reduce/);
 });
 
@@ -150,7 +152,7 @@ test("publishes branded previews, accurate page metadata and a usable enquiry ro
   for (const [path] of routes) {
     const response = await worker.fetch(new Request(`http://localhost${path}`, { headers: { accept: "text/html" } }), env(), ctx);
     const html = await response.text();
-    assert.match(html, /property="og:image" content="https:\/\/[^\"]+\/og\.png"/);
+    assert.match(html, /property="og:image" content="https:\/\/[^\"]+\/og-v2\.png"/);
     assert.match(html, /name="twitter:card" content="summary_large_image"/);
     assert.match(html, /property="og:site_name" content="Creative Pie"/);
     assert.match(html, /rel="apple-touch-icon"/);
@@ -164,7 +166,11 @@ test("publishes branded previews, accurate page metadata and a usable enquiry ro
       assert.ok(html.includes(`property="og:url" content="https://creative-pie-studio.ni-ne-gb-9.chatgpt.site${path}"`), `${path} must have its own share URL`);
     }
     if (path === "/contact") {
-      assert.match(html, /Copy your brief/);
+      assert.match(html, /Copy project brief/);
+      assert.match(html, /method="dialog"/);
+      assert.match(html, /id="enquiry-email"[^>]*type="email"/);
+      assert.doesNotMatch(html.match(/<input[^>]+id="enquiry-email"[^>]*>/)?.[0] ?? "", /required/);
+      assert.match(html, /Nothing is sent to Creative Pie/);
       assert.match(html, /https:\/\/www\.instagram\.com\/creativepie\.co\//);
     }
   }

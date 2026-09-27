@@ -6,11 +6,11 @@ export const homeTitle = "Creative Pie — Creative & Social Media Agency in Lag
 export const homeDescription = "Creative Pie is a Lagos-based, social-first agency for creative direction, content creation, social media management, branding and websites. Working worldwide.";
 export const isPreview = process.env.VERCEL_ENV === "preview" || process.env.VERCEL_ENV === "development";
 export const socialImage = {
-  url: `${siteUrl}/og.png`,
-  width: 1200,
-  height: 630,
+  url: `${siteUrl}/og-v2.png`,
+  width: 1730,
+  height: 909,
   type: "image/png",
-  alt: "Creative Pie — We make culture worth stopping for. Creative direction, content and SMM, branding and websites. Lagos / Worldwide.",
+  alt: "Creative Pie — We make culture worth stopping for. Lagos / Worldwide.",
 };
 
 export function pageMetadata(title: string, description: string, path: string): Metadata {

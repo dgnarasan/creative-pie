@@ -77,7 +77,7 @@
 .rl-work__book--vonne { background: #151719; color: #f4f0e8; }
 .rl-work__book--piebar { background: #f36a91; color: #181218; }
 .rl-work__book--kayclo { background: #4b2d24; color: #fff3dc; }
-.rl-work__book:focus-visible { outline: 2px solid var(--rl-coral); outline-offset: 4px; }
+.rl-work__book:focus-visible { outline: 3px solid var(--rl-ink); outline-offset: 4px; }
 .rl-work__spread { --spread-height: min(clamp(320px,calc(100svh - 345px),520px),calc((100cqw - 172px) / 3.066)); display: flex; height: var(--spread-height); overflow: hidden; }
 .rl-work__page--copy { display: flex; flex: 1; flex-direction: column; min-width: 0; align-items: start; padding: 20px clamp(16px,2vw,32px); border-right: 2px solid currentColor; }
 .rl-work__page--copy > span,.rl-work__page--copy small,.rl-work__folio { font: 400 12px/1.45 var(--mono); text-transform: uppercase; letter-spacing: .02em; }

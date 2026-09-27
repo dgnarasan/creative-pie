@@ -1,9 +1,11 @@
 "use client";
 
 import Link from "next/link";
+import { MotionPreferences, MotionToggle, useSiteReducedMotion } from "./motion-preference";
+import { PrivacyNotice } from "./privacy-notice";
 import { contactLabel, contactUrl } from "./contact-details";
 import { usePathname, useRouter } from "next/navigation";
-import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import {
   AnchorHTMLAttributes,
   FormEvent,
@@ -63,12 +65,12 @@ export function SmartLink({ href, children, className = "", onNavigate, ...rest 
     event.preventDefault();
     onNavigate?.();
     if (href === pathname) {
-      window.scrollTo({ top: 0, behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" });
+      window.scrollTo({ top: 0, behavior: (document.documentElement.dataset.reduceMotion === "true" || window.matchMedia("(prefers-reduced-motion: reduce)").matches) ? "auto" : "smooth" });
       return;
     }
     router.prefetch(href);
     document.documentElement.classList.add("is-transitioning");
-    const delay = window.matchMedia("(prefers-reduced-motion: reduce)").matches ? 0 : 190;
+    const delay = (document.documentElement.dataset.reduceMotion === "true" || window.matchMedia("(prefers-reduced-motion: reduce)").matches) ? 0 : 190;
     window.setTimeout(() => router.push(href), delay);
     window.setTimeout(() => document.documentElement.classList.remove("is-transitioning"), 1400);
   }
@@ -78,8 +80,13 @@ export function SmartLink({ href, children, className = "", onNavigate, ...rest 
 
 function ExperienceController() {
   const pathname = usePathname();
+  const previousPath = useRef(pathname);
 
   useEffect(() => {
+    if (previousPath.current !== pathname) {
+      document.getElementById("site-content")?.focus({ preventScroll: true });
+      previousPath.current = pathname;
+    }
     document.documentElement.classList.remove("is-transitioning");
     document.documentElement.classList.add("motion-ready");
 
@@ -161,7 +168,7 @@ function Header() {
   const [activeIndex, setActiveIndex] = useState(0);
   const menuRef = useRef<HTMLDivElement>(null);
   const buttonRef = useRef<HTMLButtonElement>(null);
-  const reducedMotion = useReducedMotion();
+  const reducedMotion = useSiteReducedMotion();
 
   useEffect(() => {
     const closeAfterNavigation = window.setTimeout(() => setOpen(false), 0);
@@ -171,6 +178,8 @@ function Header() {
   useEffect(() => {
     document.body.classList.toggle("menu-open", open);
     if (!open) return;
+    const background = Array.from(document.querySelectorAll<HTMLElement>(".site-header, #site-content, .site-footer"));
+    background.forEach((element) => { element.inert = true; });
     const focusable = Array.from(menuRef.current?.querySelectorAll<HTMLElement>("a, button") ?? []);
     focusable[0]?.focus();
     const keydown = (event: KeyboardEvent) => {
@@ -191,7 +200,12 @@ function Header() {
       }
     };
     window.addEventListener("keydown", keydown);
-    return () => window.removeEventListener("keydown", keydown);
+    return () => {
+      window.removeEventListener("keydown", keydown);
+      background.forEach((element) => { element.inert = false; });
+      document.body.classList.remove("menu-open");
+      buttonRef.current?.focus({ preventScroll: true });
+    };
   }, [open]);
 
   return (
@@ -206,10 +220,11 @@ function Header() {
               <SmartLink key={href} href={href} aria-current={pathname === href || pathname.startsWith(`${href}/`) ? "page" : undefined}>{label}</SmartLink>
             ))}
           </nav>
+          <div className="header-actions"><MotionToggle />
           <button ref={buttonRef} className="menu-button" type="button" aria-expanded={open} aria-controls="site-index" onClick={() => setOpen(!open)}>
             <span className="sr-only">{open ? "Close menu" : "Open menu"}</span>
             <span className="menu-button__label">{open ? "Close" : "Index"}</span><i aria-hidden="true" /><b aria-hidden="true" />
-          </button>
+          </button></div>
         </div>
       </header>
       <AnimatePresence>
@@ -225,6 +240,7 @@ function Header() {
             animate="open"
             exit={reducedMotion ? undefined : "closed"}
           >
+            <button type="button" className="site-index__close" onClick={() => setOpen(false)}>Close menu <span aria-hidden="true">×</span></button>
             <div className="site-index__shutters" aria-hidden="true">
               {Array.from({ length: 5 }, (_, index) => (
                 <motion.i key={index} variants={{
@@ -292,9 +308,10 @@ function Footer() {
         <div><BrandMark /></div>
         <div><span>Enquiries</span><a href={contactUrl} target="_blank" rel="noopener noreferrer">{contactLabel}</a></div>
         <div><span>Base</span><p>Lagos, Nigeria<br />Working worldwide</p></div>
-        <div><span>Index</span><SmartLink href="/work">Work</SmartLink><SmartLink href="/capabilities">Services</SmartLink><SmartLink href="/studio">Studio</SmartLink><SmartLink href="/privacy">Privacy</SmartLink></div>
+        <div><span>Index</span><SmartLink href="/work">Work</SmartLink><SmartLink href="/capabilities">Services</SmartLink><SmartLink href="/studio">Studio</SmartLink><SmartLink href="/contact">Contact</SmartLink></div>
       </div>
-      <div className="footer-base"><span>© Creative Pie 2026</span><span>Independent since 2024</span><span>CP—01</span></div>
+      <nav className="footer-policies" aria-label="Policies"><SmartLink href="/privacy">Privacy policy</SmartLink><SmartLink href="/terms">Terms &amp; conditions</SmartLink><SmartLink href="/cookies">Cookie policy</SmartLink><SmartLink href="/refunds">Refunds &amp; cancellations</SmartLink></nav>
+      <div className="footer-base"><span>© Creative Pie 2026</span><span>Independent creative studio · Lagos, Nigeria</span><span>CP—01</span></div>
     </footer>
   );
 }
@@ -302,41 +319,52 @@ function Footer() {
 export function ContactForm() {
   const [draft, setDraft] = useState("");
   const [copied, setCopied] = useState(false);
+  const [ready, setReady] = useState(false);
+  const draftRef = useRef<HTMLTextAreaElement>(null);
+  useEffect(() => { setReady(true); }, []);
 
   async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    const subject = `Creative Pie enquiry — ${String(data.get("name") || "New project")}`;
+    const name = String(data.get("name") || "").trim();
+    const email = String(data.get("email") || "").trim();
+    const service = String(data.get("service") || "");
     const body = [
-      `Name / company: ${String(data.get("name") || "")}`,
-      `Email: ${String(data.get("email") || "")}`,
-      `Project type: ${String(data.get("service") || "")}`,
+      `Creative Pie enquiry — ${name}`,
+      `Name / company: ${name}`,
+      ...(email ? [`Preferred reply email: ${email}`] : []),
+      ...(service ? [`Project type: ${service}`] : []),
       "",
-      String(data.get("brief") || ""),
+      String(data.get("brief") || "").trim(),
     ].join("\n");
-    const message = `${subject}\n\n${body}`;
-    setDraft(message);
+    setDraft(body);
     setCopied(false);
     try {
-      await navigator.clipboard.writeText(message);
+      await navigator.clipboard.writeText(body);
       setCopied(true);
     } catch {
-      // The visible draft remains available when clipboard access is unavailable.
+      // Show the full text even when the clipboard is denied or unavailable.
     }
+    window.requestAnimationFrame(() => draftRef.current?.focus());
   }
 
   return (
-    <form className="contact-form" onSubmit={submit}>
-      <label><span>01 / Name or company</span><input name="name" required placeholder="Your name" /></label>
-      <label><span>02 / Email</span><input name="email" required type="email" placeholder="you@company.com" /></label>
-      <label><span>03 / What are we making?</span><select name="service" defaultValue=""><option value="" disabled>Choose a starting point</option><option>Branding</option><option>Content Creation + SMM</option><option>Website + digital experience</option><option>Creative partnership</option><option>Something else</option></select></label>
-      <label><span>04 / The brief</span><textarea name="brief" rows={5} required placeholder="The ambition, the problem, the timing…" /></label>
-      <button type="submit">Copy your brief <i>↗︎</i></button>
-      <p>Copy your brief, then paste it into a message to {contactLabel} on Instagram. This form does not send or store your details.</p>
+    <form className="contact-form" method="dialog" onSubmit={submit} aria-describedby="brief-privacy brief-sensitive">
+      <p className="form-intro" id="brief-privacy">This prepares a message on your device. Nothing is sent to Creative Pie until you paste and send it on Instagram. Read our <SmartLink href="/privacy">privacy policy</SmartLink>.</p>
+      <label htmlFor="enquiry-name"><span>01 / Name or company <small>Required</small></span><input id="enquiry-name" name="name" required autoComplete="name" maxLength={120} placeholder="Your name or company" /></label>
+      <label htmlFor="enquiry-email"><span>02 / Reply email <small>Optional</small></span><input id="enquiry-email" name="email" type="email" autoComplete="email" maxLength={254} aria-describedby="email-help" placeholder="you@company.com" /></label>
+      <p className="field-help" id="email-help">Leave this blank if you would like us to reply on Instagram.</p>
+      <label htmlFor="enquiry-service"><span>03 / Project type <small>Optional</small></span><select id="enquiry-service" name="service" defaultValue=""><option value="">Choose a starting point</option><option>Branding</option><option>Content Creation + SMM</option><option>Website + digital experience</option><option>Creative partnership</option><option>Something else</option></select></label>
+      <label htmlFor="enquiry-brief"><span>04 / The brief <small>Required</small></span><textarea id="enquiry-brief" name="brief" rows={5} required maxLength={3000} aria-describedby="brief-sensitive" placeholder="What do you need, and when?" /></label>
+      <p className="field-help" id="brief-sensitive">Up to 3,000 characters. Please leave out passwords, payment details and sensitive personal information.</p>
+      <button type="submit" disabled={!ready}>Copy project brief <i aria-hidden="true">↗︎</i></button>
+      <noscript><p>The brief tool needs JavaScript. You can contact Creative Pie directly using the Instagram link; this form will not send your details.</p></noscript>
+      <p>Copying is your choice. It does not send a message, book a project or subscribe you to marketing.</p>
+      <p className="sr-only" role="status" aria-live="polite">{draft ? copied ? "Project brief copied to your clipboard. Nothing has been sent." : "Clipboard unavailable. Your brief is ready to select and copy below. Nothing has been sent." : ""}</p>
       {draft && <div className="contact-draft">
-        <p role="status">{copied ? "Brief copied. Open Instagram and paste it into a message." : "Your brief is ready. Select and copy the text below, then send it on Instagram."}</p>
-        <label><span>Your message</span><textarea aria-label="Your enquiry draft" readOnly rows={7} value={draft} onFocus={(event) => event.currentTarget.select()} /></label>
-        <a className="section-link" href={contactUrl} target="_blank" rel="noopener noreferrer">Open Instagram <i>↗︎</i></a>
+        <p>{copied ? "Brief copied. Open Instagram and paste it into a message." : "Your brief is ready. Select and copy the text below, then send it on Instagram."}</p>
+        <label htmlFor="enquiry-draft"><span>Your message</span><textarea id="enquiry-draft" ref={draftRef} readOnly rows={7} value={draft} onFocus={(event) => event.currentTarget.select()} /></label>
+        <a className="section-link" href={contactUrl} target="_blank" rel="noopener noreferrer">Open Instagram to send <span className="sr-only">(opens a new tab)</span><i aria-hidden="true">↗︎</i></a>
       </div>}
     </form>
   );
@@ -344,14 +372,14 @@ export function ContactForm() {
 
 export function SiteChrome({ children }: { children: ReactNode }) {
   return (
-    <>
+    <MotionPreferences>
       <ExperienceController />
       <a className="skip-link" href="#site-content">Skip to content</a>
       <div className="scroll-progress" aria-hidden="true" />
       <div className="page-transition" aria-hidden="true"><span>Creative Pie</span><i /></div>
       <Header />
-      <div className="site-canvas" id="site-content">{children}</div>
+      <div className="site-canvas" id="site-content" tabIndex={-1}><PrivacyNotice />{children}</div>
       <Footer />
-    </>
+    </MotionPreferences>
   );
 }

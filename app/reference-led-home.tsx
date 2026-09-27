@@ -3,7 +3,8 @@
 import { contactLabel, contactUrl } from "./contact-details";
 
 import { useEffect, useRef, useState, type CSSProperties } from "react";
-import { motion, useInView, useMotionValue, useReducedMotion } from "framer-motion";
+import { motion, useInView, useMotionValue } from "framer-motion";
+import { useSiteReducedMotion } from "./motion-preference";
 import { SmartLink } from "./site-chrome";
 
 type HeroFrame = {
@@ -182,7 +183,7 @@ const steps = [
   ["01", "Brief", "We agree on the audience, objective, deliverables, timing and budget."],
   ["02", "Direction", "We present one clear route for the image, type, motion and production."],
   ["03", "Production", "We make, review and edit the agreed work across the required formats."],
-  ["04", "Handover", "You receive final files, working assets and clear guidance for using them."],
+  ["04", "Handover", "You receive the agreed final deliverables and clear guidance for using them."],
 ];
 
 const ease = [0.16, 1, 0.3, 1] as const;
@@ -244,7 +245,7 @@ function CampaignCollage({ project, reduced }: { project: ProjectItem; reduced: 
 
 function ServiceFolders() {
   const deckRef = useRef<HTMLDivElement>(null);
-  const reducedMotion = useReducedMotion();
+  const reducedMotion = useSiteReducedMotion();
 
   useEffect(() => {
     const deck = deckRef.current;
@@ -336,7 +337,6 @@ function ServiceFolders() {
 export function ReferenceLedHome() {
   const rootRef = useRef<HTMLDivElement>(null);
   const workRef = useRef<HTMLDivElement>(null);
-  const proofRef = useRef<HTMLDialogElement>(null);
   const elapsedRef = useRef(0);
   const dragStart = useRef<{ x: number; y: number } | null>(null);
   const progress = useMotionValue(0);
@@ -345,8 +345,7 @@ export function ReferenceLedHome() {
   const [workHeld, setWorkHeld] = useState(false);
   const [keyboardReading, setKeyboardReading] = useState(false);
   const [workIndex, setWorkIndex] = useState(0);
-  const [proofOpen, setProofOpen] = useState(false);
-  const reducedMotion = useReducedMotion();
+  const reducedMotion = useSiteReducedMotion();
 
   useEffect(() => {
     if (reducedMotion || !rootRef.current) return;
@@ -406,7 +405,7 @@ export function ReferenceLedHome() {
   }, [workVisible]);
 
   useEffect(() => {
-    if (!workVisible || playbackStopped || workHeld || keyboardReading || proofOpen) return;
+    if (!workVisible || playbackStopped || workHeld || keyboardReading) return;
     let frame = 0;
     let previous = performance.now();
     const resetClock = () => { previous = performance.now(); };
@@ -428,17 +427,8 @@ export function ReferenceLedHome() {
     document.addEventListener("visibilitychange", resetClock);
     frame = requestAnimationFrame(tick);
     return () => { cancelAnimationFrame(frame); document.removeEventListener("visibilitychange", resetClock); };
-  }, [workVisible, playbackStopped, workHeld, keyboardReading, proofOpen, workIndex, progress]);
+  }, [workVisible, playbackStopped, workHeld, keyboardReading, workIndex, progress]);
 
-  useEffect(() => {
-    const dialog = proofRef.current;
-    if (proofOpen && dialog && !dialog.open) dialog.showModal();
-    if (!proofOpen && dialog?.open) dialog.close();
-    if (!proofOpen) return;
-    const previousOverflow = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
-    return () => { document.body.style.overflow = previousOverflow; };
-  }, [proofOpen]);
 
   return (
     <div className="rl-home" ref={rootRef}>
@@ -469,14 +459,6 @@ export function ReferenceLedHome() {
           <p>Beauty, fashion and drinks.</p>
         </header>
 
-        <aside className="rl-performance" aria-label="Creative Pie performance proof">
-          <button className="rl-performance__summary" type="button" aria-haspopup="dialog" aria-expanded={proofOpen} aria-controls="rl-performance-proof" onClick={() => setProofOpen(true)}>
-            <span>Creative Pie / Channel views</span>
-            <strong><span>29,086</span><i aria-hidden="true">→</i><span>136,797</span><small>views</small></strong>
-            <em>View before &amp; after <i aria-hidden="true">↗</i></em>
-          </button>
-        </aside>
-
         <div className="rl-work__stage" ref={workRef}
           onFocusCapture={(event) => { if (event.target instanceof HTMLElement && event.target.matches(":focus-visible")) setKeyboardReading(true); }}
           onBlurCapture={(event) => { if (!event.currentTarget.contains(event.relatedTarget as Node)) setKeyboardReading(false); }}>
@@ -491,7 +473,7 @@ export function ReferenceLedHome() {
             </div>
             <div className="rl-work__controls">
               {!reducedMotion && <button className="rl-work__playback" type="button" onClick={() => { setWorkPaused((current) => !current); setKeyboardReading(false); }} aria-label={workPaused ? "Play project sequence" : "Pause project sequence"}>
-                <span aria-hidden="true">{workPaused ? "▶" : "Ⅱ"}</span>{workPaused ? "Play projects" : "Auto / Pause"}
+                <span aria-hidden="true">{workPaused ? "▶" : "Ⅱ"}</span>{workPaused ? "Play projects" : "Pause projects"}
               </button>}
               <button type="button" onClick={() => selectProject(workIndex - 1)} aria-label="Previous project"><span aria-hidden="true">←</span></button>
               <button type="button" onClick={() => selectProject(workIndex + 1)} aria-label="Next project"><span aria-hidden="true">→</span></button>
@@ -521,13 +503,6 @@ export function ReferenceLedHome() {
           </div>
         </div>
 
-        <dialog className="rl-performance__dialog" id="rl-performance-proof" aria-labelledby="rl-proof-title" ref={proofRef} onCancel={() => setProofOpen(false)} onClose={() => setProofOpen(false)} onClick={(event) => { if (event.target === event.currentTarget) setProofOpen(false); }}>
-          <div className="rl-performance__sheet">
-            <header><div><span className="rl-label">Creative Pie / Channel results</span><h2 id="rl-proof-title">Before &amp; after.</h2></div><button type="button" onClick={() => setProofOpen(false)} aria-label="Close performance snapshot">Close ×</button></header>
-            <p>Views increased from 29,086 to 136,797. These are Creative Pie’s own channel results, separate from the client campaigns.</p>
-            <figure><img src="/assets/cp-results-growth-v1.webp" alt="Creative Pie performance snapshot showing views increasing from 29,086 to 136,797" /></figure>
-          </div>
-        </dialog>
       </section>
 
       <section className="rl-services-opener" aria-labelledby="rl-services-title">
@@ -551,7 +526,7 @@ export function ReferenceLedHome() {
           <span>03 / Process</span><h2 id="rl-process-title">How projects move.</h2><p>A clear sequence from the first conversation to final delivery.</p>
         </header>
         <div className="rl-process__scene">
-          <figure className="rl-process__vehicle"><img src="/assets/cp-strategy-truck-branded-v3.webp" alt="Creative Pie production truck crossing a city intersection" /></figure>
+          <figure className="rl-process__vehicle"><img src="/assets/cp-strategy-truck-branded-v3.webp" alt="Illustrative Creative Pie-branded truck concept at a city intersection" /></figure>
           <div className="rl-process__route" aria-hidden="true"><i /><i /><i /><i /></div>
         </div>
         <div className="rl-process__steps">

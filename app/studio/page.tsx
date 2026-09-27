@@ -14,9 +14,9 @@ export default function StudioPage() {
         <div className="page-ring" aria-hidden="true" />
       </header>
       <section className="studio-feature">
-        <div className="studio-feature__image"><DirectImage src="/assets/cp-culture-cut-process.webp" alt="Hands editing printed campaign proofs at a Creative Pie working session" priority /></div>
+        <div className="studio-feature__image"><DirectImage src="/assets/cp-studio-bts.webp" alt="Behind the scenes at a Creative Pie shoot: a model between studio lights" priority /></div>
         <div className="studio-feature__copy" data-reveal>
-          <span>CP / Independent since 2024</span>
+          <span>CP / Independent creative studio</span>
           <h2>One studio.<br /><em>Flexible teams.</em></h2>
           <p>We bring branding, creative direction, content production, social media management and websites together. Each project is staffed according to its scope.</p>
         </div>

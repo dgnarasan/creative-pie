@@ -10,7 +10,7 @@ export default function ContactPage() {
       <header>
         <span>Contact / Index 005</span>
         <h1>Tell us about<br /><em>your project.</em></h1>
-        <p>Share what you need, your timing and a useful budget range. A rough outline is enough.</p>
+        <p>Prepare a short brief, then send it to us on Instagram when you are ready. A rough outline is enough.</p>
         <div className="page-ring" aria-hidden="true" />
       </header>
       <section className="contact-layout">
