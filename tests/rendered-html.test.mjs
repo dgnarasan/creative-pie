@@ -10,8 +10,6 @@ const routes = [
   ["/contact", /Tell us about/],
   ["/privacy", /Privacy/],
   ["/terms", /Terms.*conditions/is],
-  ["/cookies", /Cookie policy/],
-  ["/refunds", /Refunds.*cancellations/is],
 ];
 
 async function loadWorker() {
@@ -112,6 +110,12 @@ test("keeps unfinished case studies and the journal offline", async () => {
 test("renders every public content route", async () => {
   const worker = await loadWorker();
 
+  for (const [path, target] of [["/cookies", "/privacy#cookies"], ["/refunds", "/terms#cancellations"]]) {
+    const response = await worker.fetch(new Request(`http://localhost${path}`, { headers: { accept: "text/html" } }), env(), ctx);
+    assert.equal(response.status, 308, `${path} should permanently redirect`);
+    assert.equal(new URL(response.headers.get("location"), "http://localhost").href, `http://localhost${target}`);
+  }
+
   for (const [path, expected] of routes) {
     const response = await worker.fetch(
       new Request(`http://localhost${path}`, { headers: { accept: "text/html" } }),
@@ -152,7 +156,7 @@ test("publishes branded previews, accurate page metadata and a usable enquiry ro
   for (const [path] of routes) {
     const response = await worker.fetch(new Request(`http://localhost${path}`, { headers: { accept: "text/html" } }), env(), ctx);
     const html = await response.text();
-    assert.match(html, /property="og:image" content="https:\/\/[^\"]+\/og-v2\.png"/);
+    assert.match(html, /property="og:image" content="https:\/\/[^\"]+\/og-v3\.png"/);
     assert.match(html, /name="twitter:card" content="summary_large_image"/);
     assert.match(html, /property="og:site_name" content="Creative Pie"/);
     assert.match(html, /rel="apple-touch-icon"/);

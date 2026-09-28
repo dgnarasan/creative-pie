@@ -2,7 +2,6 @@
 
 import Link from "next/link";
 import { MotionPreferences, useSiteReducedMotion } from "./motion-preference";
-import { PrivacyNotice } from "./privacy-notice";
 import { contactLabel, contactUrl } from "./contact-details";
 import { usePathname, useRouter } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
@@ -310,7 +309,7 @@ function Footer() {
         <div><span>Base</span><p>Lagos, Nigeria<br />Working worldwide</p></div>
         <div><span>Index</span><SmartLink href="/work">Work</SmartLink><SmartLink href="/capabilities">Services</SmartLink><SmartLink href="/studio">Studio</SmartLink><SmartLink href="/contact">Contact</SmartLink></div>
       </div>
-      <nav className="footer-policies" aria-label="Policies"><SmartLink href="/privacy">Privacy policy</SmartLink><SmartLink href="/terms">Terms &amp; conditions</SmartLink><SmartLink href="/cookies">Cookie policy</SmartLink><SmartLink href="/refunds">Refunds &amp; cancellations</SmartLink></nav>
+      <nav className="footer-policies" aria-label="Policies"><SmartLink href="/privacy">Privacy &amp; cookies</SmartLink><SmartLink href="/terms">Terms &amp; conditions</SmartLink></nav>
       <div className="footer-base"><span>© Creative Pie 2026</span><span>Independent creative studio · Lagos, Nigeria</span></div>
     </footer>
   );
@@ -378,7 +377,7 @@ export function SiteChrome({ children }: { children: ReactNode }) {
       <div className="scroll-progress" aria-hidden="true" />
       <div className="page-transition" aria-hidden="true"><span>Creative Pie</span><i /></div>
       <Header />
-      <div className="site-canvas" id="site-content" tabIndex={-1}><PrivacyNotice />{children}</div>
+      <div className="site-canvas" id="site-content" tabIndex={-1}>{children}</div>
       <Footer />
     </MotionPreferences>
   );
