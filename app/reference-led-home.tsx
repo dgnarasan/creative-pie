@@ -1,7 +1,6 @@
 "use client";
 
 import { contactLabel, contactUrl } from "./contact-details";
-import { PrivacyNotice } from "./privacy-notice";
 
 import { useEffect, useRef, useState, type CSSProperties } from "react";
 import { motion, useInView, useMotionValue } from "framer-motion";
@@ -435,7 +434,6 @@ export function ReferenceLedHome() {
     <div className="rl-home" ref={rootRef}>
       <section className="rl-hero" aria-labelledby="rl-hero-title">
         <div className="rl-hero__topline"><span>Creative Pie / Lagos + worldwide</span><span>Social-first creative agency</span></div>
-        <PrivacyNotice />
         <div className="rl-hero__canvas">
           <div className="rl-hero__media-field" aria-label="Moving selection of Creative Pie campaign media">
             <HeroMediaRow frames={heroDesktopFrames} desktop />
