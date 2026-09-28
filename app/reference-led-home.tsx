@@ -257,7 +257,7 @@ function HeroMediaRow({ frames, reverse = false, desktop = false }: { frames: He
   );
 }
 
-function CampaignCollage({ project, reduced }: { project: ProjectItem; reduced: boolean }) {
+function CampaignCollage({ project, reduced, reveal }: { project: ProjectItem; reduced: boolean; reveal: boolean }) {
   const order = project.layout === "anagen" ? [1, 0, 2, 3] : project.layout === "vonne" ? [0, 1, 3, 2] : [1, 0, 2];
   return (
     <div className={`rl-work__collage rl-work__collage--${project.layout}`} aria-label={`${project.title} photographs`}>
@@ -265,7 +265,7 @@ function CampaignCollage({ project, reduced }: { project: ProjectItem; reduced: 
         const asset = project.images[imageIndex];
         return (
           <motion.figure key={asset.image} className={`rl-work__photo rl-work__photo--${index + 1}`} style={{ "--image-ratio": dimensions(asset.image)[0] / dimensions(asset.image)[1] } as CSSProperties}
-            initial={false} animate={{ clipPath: "inset(0 0 0% 0)" }} transition={{ duration: reduced ? 0 : 0.65, delay: index * 0.07, ease }}>
+            initial={reduced || !reveal ? false : { clipPath: "inset(0 0 100% 0)", y: 10 }} animate={{ clipPath: "inset(0 0 0% 0)", y: 0 }} transition={{ duration: reduced ? 0 : 0.65, delay: index * 0.07, ease }}>
             <ResponsiveImage src={asset.image} sizes={campaignImageSizes} width={dimensions(asset.image)[0]} height={dimensions(asset.image)[1]} alt={asset.alt} draggable={false} />
           </motion.figure>
         );
@@ -376,6 +376,7 @@ export function ReferenceLedHome() {
   const [workHeld, setWorkHeld] = useState(false);
   const [keyboardReading, setKeyboardReading] = useState(false);
   const [workIndex, setWorkIndex] = useState(0);
+  const [workHasChanged, setWorkHasChanged] = useState(false);
   const reducedMotion = useSiteReducedMotion();
 
   useEffect(() => {
@@ -429,6 +430,7 @@ export function ReferenceLedHome() {
   function selectProject(index: number) {
     elapsedRef.current = 0;
     progress.set(0);
+    if ((index + projects.length) % projects.length !== workIndex) setWorkHasChanged(true);
     setWorkIndex((index + projects.length) % projects.length);
   }
 
@@ -463,6 +465,7 @@ export function ReferenceLedHome() {
         if (elapsedRef.current >= 6500) {
           elapsedRef.current = 0;
           progress.set(0);
+          setWorkHasChanged(true);
           setWorkIndex((current) => (current + 1) % projects.length);
           return;
         }
@@ -534,14 +537,14 @@ export function ReferenceLedHome() {
             onPointerCancel={() => { dragStart.current = null; setWorkHeld(false); }}
             onPointerLeave={() => { dragStart.current = null; setWorkHeld(false); }}
             onKeyDown={(event) => { if (event.key === "ArrowLeft" || event.key === "ArrowRight") { event.preventDefault(); selectProject(workIndex + (event.key === "ArrowRight" ? 1 : -1)); } }}>
-            <motion.article key={activeWork.number} className={`rl-work__spread rl-work__spread--${activeWork.layout}`} initial={false} animate={{ opacity: 1 }}>
+            <motion.article key={activeWork.number} className={`rl-work__spread rl-work__spread--${activeWork.layout}`} initial={reducedMotion || !workHasChanged ? false : { opacity: 0.4 }} animate={{ opacity: 1 }} transition={{ duration: reducedMotion ? 0 : 0.45 }}>
               <div className="rl-work__page--copy">
                 <span>{activeWork.number} / Creative Pie</span>
                 <h3>{activeWork.title.split(" ").map((word) => <span key={word}>{word}</span>)}</h3>
                 <p>{activeWork.note}</p>
                 <small>{activeWork.type}</small>
               </div>
-              <CampaignCollage project={activeWork} reduced={Boolean(reducedMotion)} />
+              <CampaignCollage project={activeWork} reduced={Boolean(reducedMotion)} reveal={workHasChanged} />
             </motion.article>
             <div className="rl-work__folio"><span>{activeWork.title} / {activeWork.layout === "kayclo" ? "Mix Match Collection" : "Campaign collection"}</span><span>{activeWork.number} / {String(projects.length).padStart(2, "0")}</span></div>
           </div>

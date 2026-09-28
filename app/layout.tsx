@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import "./globals.css";
 import "./reference-home.css";
+import "./subpages.css";
 import { SiteChrome } from "./site-chrome";
 import { siteUrl } from "./site-url";
 import { brandName, homeTitle, homeDescription, isPreview, socialImage } from "./seo";

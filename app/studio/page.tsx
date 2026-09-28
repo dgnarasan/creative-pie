@@ -22,10 +22,10 @@ export default function StudioPage() {
         </div>
       </section>
       <section className="belief-ledger">
-        <article data-reveal><span>01</span><h3>Define the problem.</h3><p>We agree on the audience, objective and practical constraints before production.</p></article>
-        <article data-reveal><span>02</span><h3>Set the direction.</h3><p>Typography, imagery, pacing and tone are established before assets are multiplied.</p></article>
-        <article data-reveal><span>03</span><h3>Use motion carefully.</h3><p>Movement supports navigation, hierarchy and feedback.</p></article>
-        <article data-reveal><span>04</span><h3>Choose the right method.</h3><p>Photography, film, AI, design and code are selected according to the assignment.</p></article>
+        <article data-reveal><span>01</span><h3>Start with your brand.</h3><p>We agree on who you want to reach, what you need to communicate and what the project needs to deliver.</p></article>
+        <article data-reveal><span>02</span><h3>Find the shared idea.</h3><p>We shape the concept, references and visual direction before moving into design or production.</p></article>
+        <article data-reveal><span>03</span><h3>Make the pieces connect.</h3><p>Your imagery, words and design should feel like the same brand, from a social post to your website.</p></article>
+        <article data-reveal><span>04</span><h3>Plan for what comes next.</h3><p>We agree on the formats, final files and any ongoing support your team needs after the work is delivered.</p></article>
       </section>
       <section className="studio-close" data-reveal>
         <span>Lagos + Worldwide</span><h2>Based in Lagos.<br />Working worldwide.</h2><SmartLink href="/contact">Contact the studio <i>↗︎</i></SmartLink>

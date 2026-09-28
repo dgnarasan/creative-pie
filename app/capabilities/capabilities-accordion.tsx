@@ -4,7 +4,7 @@ import { useState } from "react";
 import { services } from "../site-data";
 
 export function CapabilitiesAccordion() {
-  const [open, setOpen] = useState<number | null>(null);
+  const [open, setOpen] = useState<number | null>(0);
 
   return (
     <section className="capability-list" id="service-index" aria-label="Creative Pie capabilities">
@@ -23,7 +23,7 @@ export function CapabilitiesAccordion() {
               onClick={() => setOpen(expanded ? null : index)}
             >
               <span>{service.number}</span>
-              <h2 className="display">{service.title}</h2>
+              <div className="capability-item__title"><h2 className="display">{service.title}</h2><p>{service.summary}</p></div>
               <i aria-hidden="true">+</i>
             </button>
             <div
@@ -33,7 +33,7 @@ export function CapabilitiesAccordion() {
               aria-labelledby={controlId}
               aria-hidden={!expanded}
             >
-              <div className="capability-item__body"><p>{service.summary}</p><p>{service.detail}</p></div>
+              <div className="capability-item__body"><span>What this can include</span><p>{service.detail}</p></div>
             </div>
           </article>
         );

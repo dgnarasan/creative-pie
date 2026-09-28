@@ -10,10 +10,11 @@ export default function ContactPage() {
       <header>
         <span>Contact / Index 005</span>
         <h1>Tell us about<br /><em>your project.</em></h1>
-        <p>Prepare a short brief, then send it to us on Instagram when you are ready. A rough outline is enough.</p>
+        <p>A new brand, a campaign, a website—or an idea you want to talk through. Start with a message.</p>
+        <div className="contact-direct"><a href={contactUrl} target="_blank" rel="noopener noreferrer">Message us on Instagram <span aria-hidden="true">↗︎</span></a><a href="#prepare-enquiry">Outline your project first <span aria-hidden="true">↓</span></a></div>
         <div className="page-ring" aria-hidden="true" />
       </header>
-      <section className="contact-layout">
+      <section className="contact-layout" id="prepare-enquiry">
         <ContactForm />
         <aside>
           <div><span>Instagram / Direct messages</span><a href={contactUrl} target="_blank" rel="noopener noreferrer">{contactLabel}</a></div>

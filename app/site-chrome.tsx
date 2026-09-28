@@ -322,7 +322,7 @@ export function ContactForm() {
   const draftRef = useRef<HTMLTextAreaElement>(null);
   useEffect(() => { setReady(true); }, []);
 
-  async function submit(event: FormEvent<HTMLFormElement>) {
+  function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
     const name = String(data.get("name") || "").trim();
@@ -338,32 +338,37 @@ export function ContactForm() {
     ].join("\n");
     setDraft(body);
     setCopied(false);
-    try {
-      await navigator.clipboard.writeText(body);
-      setCopied(true);
-    } catch {
-      // Show the full text even when the clipboard is denied or unavailable.
-    }
     window.requestAnimationFrame(() => draftRef.current?.focus());
   }
 
+  async function copyMessage() {
+    try {
+      await navigator.clipboard.writeText(draft);
+      setCopied(true);
+    } catch {
+      draftRef.current?.focus();
+      draftRef.current?.select();
+    }
+  }
+
   return (
-    <form className="contact-form" method="dialog" onSubmit={submit} aria-describedby="brief-privacy brief-sensitive">
-      <p className="form-intro" id="brief-privacy">This prepares a message on your device. Nothing is sent to Creative Pie until you paste and send it on Instagram. Read our <SmartLink href="/privacy">privacy policy</SmartLink>.</p>
+    <form className="contact-form" method="dialog" onSubmit={submit} onChange={() => { setDraft(""); setCopied(false); }} aria-describedby="brief-privacy brief-sensitive">
+      <h2 className="form-heading">A little context goes a long way.</h2>
+      <p className="form-intro" id="brief-privacy">Use this optional outline to prepare your Instagram message. Nothing is sent to Creative Pie from this form. <SmartLink href="/privacy">Privacy policy</SmartLink>.</p>
       <label htmlFor="enquiry-name"><span>01 / Name or company <small>Required</small></span><input id="enquiry-name" name="name" required autoComplete="name" maxLength={120} placeholder="Your name or company" /></label>
       <label htmlFor="enquiry-email"><span>02 / Reply email <small>Optional</small></span><input id="enquiry-email" name="email" type="email" autoComplete="email" maxLength={254} aria-describedby="email-help" placeholder="you@company.com" /></label>
       <p className="field-help" id="email-help">Leave this blank if you would like us to reply on Instagram.</p>
       <label htmlFor="enquiry-service"><span>03 / Project type <small>Optional</small></span><select id="enquiry-service" name="service" defaultValue=""><option value="">Choose a starting point</option><option>Branding</option><option>Content Creation + SMM</option><option>Website + digital experience</option><option>Creative partnership</option><option>Something else</option></select></label>
       <label htmlFor="enquiry-brief"><span>04 / The brief <small>Required</small></span><textarea id="enquiry-brief" name="brief" rows={5} required maxLength={3000} aria-describedby="brief-sensitive" placeholder="What do you need, and when?" /></label>
       <p className="field-help" id="brief-sensitive">Up to 3,000 characters. Please leave out passwords, payment details and sensitive personal information.</p>
-      <button type="submit" disabled={!ready}>Copy project brief <i aria-hidden="true">↗︎</i></button>
+      <button type="submit" disabled={!ready}>Review your message <i aria-hidden="true">↗︎</i></button>
       <noscript><p>The brief tool needs JavaScript. You can contact Creative Pie directly using the Instagram link; this form will not send your details.</p></noscript>
-      <p>Copying is your choice. It does not send a message, book a project or subscribe you to marketing.</p>
-      <p className="sr-only" role="status" aria-live="polite">{draft ? copied ? "Project brief copied to your clipboard. Nothing has been sent." : "Clipboard unavailable. Your brief is ready to select and copy below. Nothing has been sent." : ""}</p>
+      <p>Review your message, then paste and send it in Instagram.</p>
+      <p className="sr-only" role="status" aria-live="polite">{draft ? copied ? "Message copied. Open Instagram to paste and send it." : "Your message is ready to review. Nothing has been sent." : ""}</p>
       {draft && <div className="contact-draft">
-        <p>{copied ? "Brief copied. Open Instagram and paste it into a message." : "Your brief is ready. Select and copy the text below, then send it on Instagram."}</p>
+        <h3>Your message is ready.</h3><p>{copied ? "Copied. Now open Instagram, paste it into a message and send." : "Check the details below, then copy your message and send it on Instagram."}</p>
         <label htmlFor="enquiry-draft"><span>Your message</span><textarea id="enquiry-draft" ref={draftRef} readOnly rows={7} value={draft} onFocus={(event) => event.currentTarget.select()} /></label>
-        <a className="section-link" href={contactUrl} target="_blank" rel="noopener noreferrer">Open Instagram to send <span className="sr-only">(opens a new tab)</span><i aria-hidden="true">↗︎</i></a>
+        <div className="draft-actions"><button type="button" onClick={copyMessage}>{copied ? "Message copied" : "Copy message"}</button><a href={contactUrl} target="_blank" rel="noopener noreferrer">Open Instagram <span className="sr-only">(opens a new tab)</span><i aria-hidden="true">↗︎</i></a></div>
       </div>}
     </form>
   );

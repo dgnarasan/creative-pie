@@ -199,7 +199,8 @@ test("publishes branded previews, accurate page metadata and a usable enquiry ro
       assert.ok(html.includes(`property="og:url" content="https://creative-pie-studio.ni-ne-gb-9.chatgpt.site${path}"`), `${path} must have its own share URL`);
     }
     if (path === "/contact") {
-      assert.match(html, /Copy project brief/);
+      assert.match(html, /Review your message/);
+      assert.match(html, /Message us on Instagram/);
       assert.match(html, /method="dialog"/);
       assert.match(html, /id="enquiry-email"[^>]*type="email"/);
       assert.doesNotMatch(html.match(/<input[^>]+id="enquiry-email"[^>]*>/)?.[0] ?? "", /required/);
