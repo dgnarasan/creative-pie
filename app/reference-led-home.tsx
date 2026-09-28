@@ -456,7 +456,6 @@ export function ReferenceLedHome() {
         <header className="rl-work__heading">
           <span className="rl-label">01 / Portfolio</span>
           <h2 id="rl-work-title">Selected work.</h2>
-          <p>Beauty, fashion and drinks.</p>
         </header>
 
         <div className="rl-work__stage" ref={workRef}
