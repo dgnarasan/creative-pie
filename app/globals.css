@@ -1,7 +1,8 @@
-@import "@fontsource-variable/archivo";
-@import "@fontsource/ibm-plex-mono/400.css";
-@import "@fontsource-variable/manrope";
-@import "@fontsource-variable/bodoni-moda";
+/* The three fonts used by the site, discovered in the document head.
+   Keep swap so text is readable while the font files arrive. */
+@font-face { font-family: "Archivo Variable"; font-style: normal; font-display: swap; font-weight: 100 900; src: url("/fonts/archivo-latin-v1.woff2") format("woff2"); }
+@font-face { font-family: "IBM Plex Mono"; font-style: normal; font-display: swap; font-weight: 400; src: url("/fonts/plex-mono-latin-v1.woff2") format("woff2"); }
+@font-face { font-family: "Bodoni Moda Variable"; font-style: normal; font-display: swap; font-weight: 400 900; src: url("/fonts/bodoni-latin-v1.woff2") format("woff2"); }
 
 :root {
   --ink: #090a09;

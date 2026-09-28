@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { readFileSync } from "node:fs";
+import { readFileSync, statSync } from "node:fs";
 
 const routes = [
   ["/", /culture worth stopping for/i],
@@ -81,6 +81,35 @@ test("renders the reference-led landing with selected campaign work", async () =
   assert.doesNotMatch(html, /NARA Index|Owambe, Modern/i);
   assert.doesNotMatch(html, /\/_vinext\/image\?/i);
   assert.doesNotMatch(html, /name=["']codex-preview["']/i);
+  const images = html.match(/<img\b[^>]*>/g) ?? [];
+  assert.ok(images.length > 0);
+  for (const image of images) {
+    assert.match(image, /src[Ss]et="[^"]+240w[^"]+480w/);
+    assert.match(image, /decoding="async"/);
+    if (/cp-(?:studio-bts|strategy-truck|services-seat|halftone-mouths)/.test(image)) {
+      assert.match(image, /loading="lazy"/, "Below-fold media must not compete with the opening screen");
+    }
+  }
+  const fontHints = new Set((html.match(/<link[^>]+as="font"[^>]*>/g) ?? []).map((tag) => tag.match(/href="([^"]+)"/)?.[1]));
+  assert.equal(fontHints.size, 3);
+  assert.doesNotMatch(html, /clip-path:inset\(0 0 100% 0\)/, "Campaign photos must be visible before hydration");
+  assert.match(html, /<source[^>]+media="\(max-width: 600px\)"[^>]+data:image/);
+  assert.match(html, /<source[^>]+media="\(min-width: 601px\)"[^>]+data:image/);
+});
+
+test("mobile image derivatives stay within a real transfer budget", () => {
+  const assets = JSON.parse(readFileSync(new URL("../app/responsive-media.json", import.meta.url), "utf8"));
+  let originalBytes = 0;
+  let mobileBytes = 0;
+  for (const [src, asset] of Object.entries(assets)) {
+    originalBytes += statSync(new URL(`../public${src}`, import.meta.url)).size;
+    for (const candidate of asset.srcSet.split(", ")) {
+      const [path, width] = candidate.split(" ");
+      const bytes = statSync(new URL(`../public${path}`, import.meta.url)).size;
+      if (width === "480w") mobileBytes += bytes;
+    }
+  }
+  assert.ok(mobileBytes < originalBytes * 0.3, "Phone-sized photos should transfer less than 30% of the original set");
 });
 
 test("keeps the active layout isolated and photographs proportional", () => {

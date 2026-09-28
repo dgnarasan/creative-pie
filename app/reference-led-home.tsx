@@ -6,6 +6,7 @@ import { useEffect, useRef, useState, type CSSProperties } from "react";
 import { motion, useInView, useMotionValue } from "framer-motion";
 import { useSiteReducedMotion } from "./motion-preference";
 import { SmartLink } from "./site-chrome";
+import { ResponsiveImage, campaignImageSizes, heroImageSizes, imageDetails } from "./responsive-image";
 
 type HeroFrame = {
   image: string;
@@ -211,13 +212,43 @@ function dimensions(image: string) {
 }
 
 function HeroMediaRow({ frames, reverse = false, desktop = false }: { frames: HeroFrame[]; reverse?: boolean; desktop?: boolean }) {
+  const rowRef = useRef<HTMLDivElement>(null);
+  const [ready, setReady] = useState(false);
+
+  useEffect(() => {
+    let disposed = false;
+    const viewport = window.matchMedia(desktop ? "(min-width: 601px)" : "(max-width: 600px)");
+    async function prepareRow() {
+      const row = rowRef.current;
+      if (!viewport.matches || !row) return;
+      const images = Array.from(row.querySelectorAll("img"));
+      const decode = (image: HTMLImageElement) => image.decode().catch(() => undefined);
+      // Show the opening frames first. Warm the rest at low priority before
+      // moving the strip so a slow connection never scrolls into empty frames.
+      await Promise.all(images.filter((image) => image.loading === "eager").map(decode));
+      if (disposed || !viewport.matches) return;
+      images.filter((image) => image.loading !== "eager").forEach((image) => {
+        image.fetchPriority = "low";
+        image.loading = "eager";
+      });
+      await Promise.all(images.map(decode));
+      if (!disposed && viewport.matches) setReady(true);
+    }
+    void prepareRow();
+    viewport.addEventListener("change", prepareRow);
+    return () => { disposed = true; viewport.removeEventListener("change", prepareRow); };
+  }, [desktop]);
+
   return (
-    <div className={`rl-hero-strip${reverse ? " is-reverse" : ""}${desktop ? " is-desktop" : " is-mobile"}`}>
+    <div ref={rowRef} className={`rl-hero-strip${reverse ? " is-reverse" : ""}${desktop ? " is-desktop" : " is-mobile"}${ready ? " is-ready" : ""}`}>
       {[0, 1].map((set) => (
         <div className="rl-hero-strip__set" key={set} aria-hidden={set > 0 || undefined}>
-          {frames.map((frame) => (
+          {frames.map((frame, index) => (
             <figure className="rl-hero-frame" style={{ "--photo-ratio": dimensions(frame.image)[0] / dimensions(frame.image)[1] } as CSSProperties} key={`${set}-${frame.image}`}>
-              <img src={frame.image} width={dimensions(frame.image)[0]} height={dimensions(frame.image)[1]} alt={set === 0 ? frame.alt : ""} />
+              <ResponsiveImage src={frame.image} width={dimensions(frame.image)[0]} height={dimensions(frame.image)[1]} alt={set === 0 ? frame.alt : ""}
+                sizes={heroImageSizes} hiddenMedia={desktop ? "(max-width: 600px)" : "(min-width: 601px)"}
+                loading={set === (reverse ? 1 : 0) && index < (desktop ? 6 : 4) ? "eager" : "lazy"}
+                fetchPriority={set === (reverse ? 1 : 0) && index === 0 ? "high" : "auto"} />
             </figure>
           ))}
         </div>
@@ -234,8 +265,8 @@ function CampaignCollage({ project, reduced }: { project: ProjectItem; reduced: 
         const asset = project.images[imageIndex];
         return (
           <motion.figure key={asset.image} className={`rl-work__photo rl-work__photo--${index + 1}`} style={{ "--image-ratio": dimensions(asset.image)[0] / dimensions(asset.image)[1] } as CSSProperties}
-            initial={reduced ? false : { clipPath: "inset(0 0 100% 0)" }} animate={{ clipPath: "inset(0 0 0% 0)" }} transition={{ duration: 0.65, delay: index * 0.07, ease }}>
-            <img src={asset.image} width={dimensions(asset.image)[0]} height={dimensions(asset.image)[1]} alt={asset.alt} draggable={false} />
+            initial={false} animate={{ clipPath: "inset(0 0 0% 0)" }} transition={{ duration: reduced ? 0 : 0.65, delay: index * 0.07, ease }}>
+            <ResponsiveImage src={asset.image} sizes={campaignImageSizes} width={dimensions(asset.image)[0]} height={dimensions(asset.image)[1]} alt={asset.alt} draggable={false} />
           </motion.figure>
         );
       })}
@@ -378,9 +409,16 @@ export function ReferenceLedHome() {
       }, rootRef);
     }
 
-    mountMotion();
+    // The motion below the fold must not compete with the opening images/fonts.
+    const motionObserver = new IntersectionObserver((entries) => {
+      if (!entries.some((entry) => entry.isIntersecting)) return;
+      motionObserver.disconnect();
+      void mountMotion();
+    }, { rootMargin: "300px" });
+    rootRef.current.querySelectorAll(".rl-process, .rl-contact").forEach((section) => motionObserver.observe(section));
     return () => {
       cancelled = true;
+      motionObserver.disconnect();
       match?.revert();
       context?.revert();
     };
@@ -396,13 +434,20 @@ export function ReferenceLedHome() {
 
   useEffect(() => {
     if (!workVisible) return;
-    const images = projects.flatMap((project) => project.images).map((asset) => {
-      const image = new Image();
-      image.src = asset.image;
-      return image;
-    });
-    return () => images.forEach((image) => { image.onload = null; });
-  }, [workVisible]);
+    // Warm only the next spread, at the same responsive size as its actual img.
+    const connection = (navigator as Navigator & { connection?: { saveData?: boolean; effectiveType?: string } }).connection;
+    if (connection?.saveData || connection?.effectiveType?.includes("2g")) return;
+    const timer = window.setTimeout(() => {
+      projects[(workIndex + 1) % projects.length].images.forEach((asset) => {
+        const image = new Image();
+        image.fetchPriority = "low";
+        image.sizes = campaignImageSizes;
+        image.srcset = imageDetails(asset.image)?.srcSet ?? "";
+        image.src = asset.image;
+      });
+    }, 600);
+    return () => window.clearTimeout(timer);
+  }, [workVisible, workIndex]);
 
   useEffect(() => {
     if (!workVisible || playbackStopped || workHeld || keyboardReading) return;
@@ -505,7 +550,7 @@ export function ReferenceLedHome() {
       </section>
 
       <section className="rl-services-opener" aria-labelledby="rl-services-title">
-        <figure className="rl-services-opener__image"><img src="/assets/cp-services-seat-v3.webp" alt="A coral project folder placed on a single oxblood-red seat in an ivory auditorium" /></figure>
+        <figure className="rl-services-opener__image"><ResponsiveImage src="/assets/cp-services-seat-v3.webp" sizes="100vw" alt="A coral project folder placed on a single oxblood-red seat in an ivory auditorium" /></figure>
         <div className="rl-services-opener__scrim" />
         <span className="rl-label">02 / Services</span>
         <span className="rl-services-opener__brief" aria-hidden="true">Creative Pie / Services</span>
@@ -525,7 +570,7 @@ export function ReferenceLedHome() {
           <span>03 / Process</span><h2 id="rl-process-title">How projects move.</h2><p>A clear sequence from the first conversation to final delivery.</p>
         </header>
         <div className="rl-process__scene">
-          <figure className="rl-process__vehicle"><img src="/assets/cp-strategy-truck-branded-v3.webp" alt="Illustrative Creative Pie-branded truck concept at a city intersection" /></figure>
+          <figure className="rl-process__vehicle"><ResponsiveImage src="/assets/cp-strategy-truck-branded-v3.webp" alt="Illustrative Creative Pie-branded truck concept at a city intersection" /></figure>
           <div className="rl-process__route" aria-hidden="true"><i /><i /><i /><i /></div>
         </div>
         <div className="rl-process__steps">
@@ -534,7 +579,7 @@ export function ReferenceLedHome() {
       </section>
 
       <section className="rl-studio" id="studio" aria-labelledby="rl-studio-title">
-        <figure className="rl-studio__portrait"><img src="/assets/cp-studio-bts.webp" width="1536" height="2048" alt="Behind the scenes at a Creative Pie shoot: a model on set between studio lights" loading="lazy" /><figcaption>Creative Pie / Behind the scenes</figcaption></figure>
+        <figure className="rl-studio__portrait"><ResponsiveImage src="/assets/cp-studio-bts.webp" width="1536" height="2048" alt="Behind the scenes at a Creative Pie shoot: a model on set between studio lights" /><figcaption>Creative Pie / Behind the scenes</figcaption></figure>
         <div className="rl-studio__copy rl-reveal">
           <span className="rl-label">04 / Studio</span>
           <h2 id="rl-studio-title">Small team.<br />Direct involvement.</h2>
@@ -549,7 +594,7 @@ export function ReferenceLedHome() {
       </section>
 
       <section className="rl-contact" aria-labelledby="rl-contact-title">
-        <div className="rl-contact__mouth" aria-hidden="true"><img src="/assets/cp-halftone-mouths-v2.webp" alt="" /><i /></div>
+        <div className="rl-contact__mouth" aria-hidden="true"><ResponsiveImage src="/assets/cp-halftone-mouths-v2.webp" sizes="100vw" alt="" /><i /></div>
         <span className="rl-label">05 / Contact</span>
         <h2 id="rl-contact-title">Tell us about<br />the project.</h2>
         <SmartLink href="/contact">Start a project <i>↗︎</i></SmartLink>

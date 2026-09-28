@@ -1,4 +1,5 @@
 import type { CSSProperties } from "react";
+import { ResponsiveImage } from "./responsive-image";
 
 type DirectImageProps = {
   src: string;
@@ -12,7 +13,7 @@ export function DirectImage({ src, alt, priority = false, className = "", style 
   return (
     // Sites serves these static assets directly; bypassing an image proxy avoids the prior blank-media failure.
     // eslint-disable-next-line @next/next/no-img-element
-    <img
+    <ResponsiveImage
       className={`fill-media${className ? ` ${className}` : ""}`}
       src={src}
       alt={alt}

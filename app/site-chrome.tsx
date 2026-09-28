@@ -74,7 +74,7 @@ export function SmartLink({ href, children, className = "", onNavigate, ...rest 
     window.setTimeout(() => document.documentElement.classList.remove("is-transitioning"), 1400);
   }
 
-  return <Link href={href} onClick={navigate} className={className} {...rest}>{children}</Link>;
+  return <Link href={href} prefetch={false} onClick={navigate} className={className} {...rest}>{children}</Link>;
 }
 
 function ExperienceController() {

@@ -1,6 +1,4 @@
 import type { Metadata, Viewport } from "next";
-import "@fontsource-variable/bodoni-moda";
-import "@fontsource-variable/manrope";
 import "./globals.css";
 import "./reference-home.css";
 import { SiteChrome } from "./site-chrome";
@@ -46,6 +44,11 @@ export const viewport: Viewport = { themeColor: "#090a09", colorScheme: "dark li
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
+      <head>
+        <link rel="preload" href="/fonts/archivo-latin-v1.woff2" as="font" type="font/woff2" crossOrigin="anonymous" />
+        <link rel="preload" href="/fonts/bodoni-latin-v1.woff2" as="font" type="font/woff2" crossOrigin="anonymous" />
+        <link rel="preload" href="/fonts/plex-mono-latin-v1.woff2" as="font" type="font/woff2" crossOrigin="anonymous" />
+      </head>
       <body>
         <SiteChrome>{children}</SiteChrome>
       </body>

@@ -1,0 +1,92 @@
+{
+  "/assets/project-anagen-textures.webp": {
+    "width": 1122,
+    "height": 1402,
+    "srcSet": "/assets/responsive/project-anagen-textures-240-35b1fb5d5e.webp 240w, /assets/responsive/project-anagen-textures-480-d912f39245.webp 480w, /assets/responsive/project-anagen-textures-800-305d49640b.webp 800w, /assets/project-anagen-textures.webp 1122w"
+  },
+  "/assets/project-kayclo-butter.webp": {
+    "width": 1080,
+    "height": 1350,
+    "srcSet": "/assets/responsive/project-kayclo-butter-240-ffbcf0286c.webp 240w, /assets/responsive/project-kayclo-butter-480-a92e6f0323.webp 480w, /assets/responsive/project-kayclo-butter-800-10f1e5b99b.webp 800w, /assets/project-kayclo-butter.webp 1080w"
+  },
+  "/assets/project-vonne-campaign-board.webp": {
+    "width": 1102,
+    "height": 1458,
+    "srcSet": "/assets/responsive/project-vonne-campaign-board-240-11271dab6f.webp 240w, /assets/responsive/project-vonne-campaign-board-480-d80f31f16f.webp 480w, /assets/responsive/project-vonne-campaign-board-800-40996ea03e.webp 800w, /assets/project-vonne-campaign-board.webp 1102w"
+  },
+  "/assets/project-piebar-product.webp": {
+    "width": 1024,
+    "height": 1280,
+    "srcSet": "/assets/responsive/project-piebar-product-240-5d33d417d7.webp 240w, /assets/responsive/project-piebar-product-480-39359a2edc.webp 480w, /assets/responsive/project-piebar-product-800-cbc11b7e5a.webp 800w, /assets/project-piebar-product.webp 1024w"
+  },
+  "/assets/project-vonne-car.webp": {
+    "width": 960,
+    "height": 1280,
+    "srcSet": "/assets/responsive/project-vonne-car-240-c5731a95d0.webp 240w, /assets/responsive/project-vonne-car-480-0fba0fadd7.webp 480w, /assets/responsive/project-vonne-car-800-728eecd60c.webp 800w, /assets/project-vonne-car.webp 960w"
+  },
+  "/assets/project-kayclo-collection.webp": {
+    "width": 1080,
+    "height": 1350,
+    "srcSet": "/assets/responsive/project-kayclo-collection-240-2e2435c2c5.webp 240w, /assets/responsive/project-kayclo-collection-480-6181a196ab.webp 480w, /assets/responsive/project-kayclo-collection-800-a0ad463498.webp 800w, /assets/project-kayclo-collection.webp 1080w"
+  },
+  "/assets/project-vonne-fur-bag.webp": {
+    "width": 1024,
+    "height": 1280,
+    "srcSet": "/assets/responsive/project-vonne-fur-bag-240-45ab475f0d.webp 240w, /assets/responsive/project-vonne-fur-bag-480-024cbd5edb.webp 480w, /assets/responsive/project-vonne-fur-bag-800-03f158b1f9.webp 800w, /assets/project-vonne-fur-bag.webp 1024w"
+  },
+  "/assets/project-piebar-bottles.webp": {
+    "width": 1024,
+    "height": 1280,
+    "srcSet": "/assets/responsive/project-piebar-bottles-240-82ce1d0ebc.webp 240w, /assets/responsive/project-piebar-bottles-480-58501bdd0e.webp 480w, /assets/responsive/project-piebar-bottles-800-96c0460a4c.webp 800w, /assets/project-piebar-bottles.webp 1024w"
+  },
+  "/assets/project-piebar-duo.webp": {
+    "width": 1024,
+    "height": 1280,
+    "srcSet": "/assets/responsive/project-piebar-duo-240-0514f5bd74.webp 240w, /assets/responsive/project-piebar-duo-480-e0703339f6.webp 480w, /assets/responsive/project-piebar-duo-800-4aea63a173.webp 800w, /assets/project-piebar-duo.webp 1024w"
+  },
+  "/assets/project-kayclo-cocoa.webp": {
+    "width": 1080,
+    "height": 1350,
+    "srcSet": "/assets/responsive/project-kayclo-cocoa-240-ba8fd273a0.webp 240w, /assets/responsive/project-kayclo-cocoa-480-ba8b05ce71.webp 480w, /assets/responsive/project-kayclo-cocoa-800-989c37846d.webp 800w, /assets/project-kayclo-cocoa.webp 1080w"
+  },
+  "/assets/project-anagen-group.webp": {
+    "width": 1005,
+    "height": 1800,
+    "srcSet": "/assets/responsive/project-anagen-group-240-11a2606584.webp 240w, /assets/responsive/project-anagen-group-480-d636864865.webp 480w, /assets/responsive/project-anagen-group-800-f5347174a5.webp 800w, /assets/project-anagen-group.webp 1005w"
+  },
+  "/assets/project-vonne-blue.webp": {
+    "width": 960,
+    "height": 1280,
+    "srcSet": "/assets/responsive/project-vonne-blue-240-26e587c732.webp 240w, /assets/responsive/project-vonne-blue-480-e21978a75b.webp 480w, /assets/responsive/project-vonne-blue-800-c0853efe92.webp 800w, /assets/project-vonne-blue.webp 960w"
+  },
+  "/assets/project-anagen-application.webp": {
+    "width": 1005,
+    "height": 1800,
+    "srcSet": "/assets/responsive/project-anagen-application-240-c03e2c3359.webp 240w, /assets/responsive/project-anagen-application-480-035416ebc3.webp 480w, /assets/responsive/project-anagen-application-800-ad66d40f29.webp 800w, /assets/project-anagen-application.webp 1005w"
+  },
+  "/assets/project-anagen-flatlay.webp": {
+    "width": 1005,
+    "height": 1800,
+    "srcSet": "/assets/responsive/project-anagen-flatlay-240-ddbf4bd072.webp 240w, /assets/responsive/project-anagen-flatlay-480-546fa60aac.webp 480w, /assets/responsive/project-anagen-flatlay-800-e755fa4308.webp 800w, /assets/project-anagen-flatlay.webp 1005w"
+  },
+  "/assets/cp-services-seat-v3.webp": {
+    "width": 1122,
+    "height": 1402,
+    "srcSet": "/assets/responsive/cp-services-seat-v3-240-541eb06f63.webp 240w, /assets/responsive/cp-services-seat-v3-480-9d4521f1b5.webp 480w, /assets/responsive/cp-services-seat-v3-800-7146b21ba3.webp 800w, /assets/cp-services-seat-v3.webp 1122w"
+  },
+  "/assets/cp-strategy-truck-branded-v3.webp": {
+    "width": 1672,
+    "height": 941,
+    "srcSet": "/assets/responsive/cp-strategy-truck-branded-v3-240-731a0f2755.webp 240w, /assets/responsive/cp-strategy-truck-branded-v3-480-6464369f28.webp 480w, /assets/responsive/cp-strategy-truck-branded-v3-800-ee13277d4d.webp 800w, /assets/cp-strategy-truck-branded-v3.webp 1672w"
+  },
+  "/assets/cp-studio-bts.webp": {
+    "width": 1536,
+    "height": 2048,
+    "srcSet": "/assets/responsive/cp-studio-bts-240-31d51b7e1b.webp 240w, /assets/responsive/cp-studio-bts-480-ab74a43308.webp 480w, /assets/responsive/cp-studio-bts-800-df5c7d1dd1.webp 800w, /assets/cp-studio-bts.webp 1536w"
+  },
+  "/assets/cp-halftone-mouths-v2.webp": {
+    "width": 1122,
+    "height": 1402,
+    "srcSet": "/assets/responsive/cp-halftone-mouths-v2-240-06c2f1259d.webp 240w, /assets/responsive/cp-halftone-mouths-v2-480-f365e4aa7f.webp 480w, /assets/responsive/cp-halftone-mouths-v2-800-6de7fc9430.webp 800w, /assets/cp-halftone-mouths-v2.webp 1122w"
+  }
+}

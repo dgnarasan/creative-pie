@@ -29,7 +29,8 @@
 .rl-hero__topline,.rl-hero__base { display: flex; justify-content: space-between; gap: 24px; border-top: 1px solid var(--rl-line-light); padding-top: 12px; color: #a5a397; }
 .rl-hero__canvas { position: relative; padding-block: 16px 24px; }
 .rl-hero__media-field { --row-height: max(clamp(260px,calc(100svh - 370px),460px),13vw); display: grid; gap: 6px; overflow: hidden; border-radius: 5px; margin-bottom: 24px; }
-.rl-hero-strip { display: flex; width: max-content; height: var(--row-height); animation: rlHeroTrack 110s linear infinite; }
+.rl-hero-strip { display: flex; width: max-content; height: var(--row-height); animation: rlHeroTrack 110s linear infinite; animation-play-state: paused; }
+.rl-hero-strip.is-ready { animation-play-state: running; }
 .rl-hero-strip.is-reverse { animation-name: rlHeroTrackReverse; animation-duration: 92s; }
 .rl-hero-strip.is-mobile { display: none; }
 .rl-hero-strip__set { display: flex; flex-shrink: 0; gap: 6px; padding-right: 6px; }
