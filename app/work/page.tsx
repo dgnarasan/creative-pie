@@ -21,7 +21,7 @@ const work = [
     images: [
       ["project-vonne-car.webp", "Orange Vonne X2X bikini styled against a silver car", "Campaign / On location"],
       ["project-vonne-blue.webp", "Metallic blue Vonne X2X bikini", "Product / Metallic blue"],
-      ["project-vonne-campaign-board.webp", "Vonne X2X campaign board with models, swimwear and fur-bag styling", "Collection / The edit"],
+      ["project-vonne-fur-portrait.webp", "Model in a black outfit carrying a white Vonne X2X fur bag", "Portrait / The fur bag"],
       ["project-vonne-fur-bag.webp", "Vonne X2X fur bag product layout", "Detail / The fur bag"],
     ],
   },

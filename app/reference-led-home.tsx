@@ -38,8 +38,8 @@ const heroTopFrames: HeroFrame[] = [
     alt: "KAYCLO butter-yellow lounge set, with portrait and full-length styling",
   },
   {
-    image: "/assets/project-vonne-campaign-board.webp",
-    alt: "Vonne X2X campaign board with models, swimwear and fur-bag styling",
+    image: "/assets/project-vonne-fur-portrait.webp",
+    alt: "Model in a black outfit carrying a white Vonne X2X fur bag",
   },
   {
     image: "/assets/project-piebar-product.webp",
@@ -124,7 +124,7 @@ const projects: ProjectItem[] = [
       { image: "/assets/project-vonne-blue.webp", alt: "Metallic blue Vonne X2X bikini product frame" },
       { image: "/assets/project-vonne-car.webp", alt: "Orange Vonne X2X bikini styled against a silver car" },
       { image: "/assets/project-vonne-fur-bag.webp", alt: "What is in my Vonne X2X fur bag product layout" },
-      { image: "/assets/project-vonne-campaign-board.webp", alt: "Vonne X2X campaign board with models, swimwear and fur-bag styling" },
+      { image: "/assets/project-vonne-fur-portrait.webp", alt: "Model in a black outfit carrying a white Vonne X2X fur bag" },
     ],
   },
   {
@@ -195,7 +195,7 @@ const imageSizes: Record<string, [number, number]> = {
   "project-anagen-group.webp": [1005, 1800],
   "project-anagen-application.webp": [1005, 1800],
   "project-anagen-flatlay.webp": [1005, 1800],
-  "project-vonne-campaign-board.webp": [1102, 1458],
+  "project-vonne-fur-portrait.webp": [1638, 2048],
   "project-vonne-blue.webp": [960, 1280],
   "project-vonne-car.webp": [960, 1280],
   "project-vonne-fur-bag.webp": [1024, 1280],
