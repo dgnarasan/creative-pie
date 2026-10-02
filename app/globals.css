@@ -1973,12 +1973,6 @@ body { font-size: 16px; }
 #site-content { scroll-margin-top: var(--header-height); }
 #site-content:focus { outline: none; }
 .header-actions { display: flex; align-items: center; justify-content: flex-end; gap: 16px; justify-self: end; }
-.project-cta { display: inline-flex; align-items: center; justify-content: center; min-height: 56px; padding: 16px 26px; border: 1px solid transparent; border-radius: 4px; background: #ff6153; color: #090a09; font: 700 16px/1.25 var(--sans); letter-spacing: -.015em; text-align: center; text-decoration: none; touch-action: manipulation; transition: background .2s ease, color .2s ease, transform .2s ease; }
-.project-cta:hover { background: #eee7da; color: #090a09; transform: translateY(-2px); }
-.project-cta:active { transform: translateY(0); }
-.project-cta--header { min-height: 44px; padding: 12px 18px; font-size: 14px; white-space: nowrap; }
-.project-cta:focus-visible { outline: 3px solid #eee7da; outline-offset: 4px; box-shadow: 0 0 0 7px #090a09; }
-.header-actions .menu-button { flex-shrink: 0; }
 .site-index__close { position: absolute; z-index: 3; right: var(--edge); top: 22px; min-height: 44px; padding: 10px 16px; color: var(--ink); border: 1px solid currentColor; border-radius: 30px; background: var(--coral); font-size: 14px; }
 .site-index__close span { margin-left: 10px; font-size: 20px; }
 .site-header--menu-open .header-actions { visibility: hidden; }
@@ -2015,19 +2009,9 @@ html[data-reduce-motion="true"] *, html[data-reduce-motion="true"] *::before, ht
 }
 @media (max-width: 560px) {
   .header-actions { gap: 8px; }
-  .project-cta--header { padding-inline: 12px; }
   .site-header__stage { grid-template-columns: minmax(0,1fr) auto; gap: 12px; }
   .legal-intro { padding-top: calc(var(--header-height) + 48px); }
   .legal-nav { grid-template-columns: 1fr; }
   .footer-policies { gap: 2px 20px; }
   .contact-form button { min-height: 52px; min-width: 0; }
-}
-@media (max-width: 360px) {
-  .site-header__stage { margin-inline: 14px; gap: 8px; }
-  .site-header .brand-mark__name { font-size: 19px; }
-  .project-cta--header { width: 100px; padding: 6px 10px; white-space: normal; }
-}
-@media (prefers-reduced-motion: reduce) {
-  .project-cta { transition: none; }
-  .project-cta:hover { transform: none; }
 }

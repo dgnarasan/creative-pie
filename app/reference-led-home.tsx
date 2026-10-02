@@ -493,7 +493,7 @@ export function ReferenceLedHome() {
             <h1 id="rl-hero-title"><span className="rl-hero__opening">We make </span><em>culture </em><span className="rl-hero__worth">worth </span><span className="rl-hero__last-words">stopping for.</span></h1>
             <div className="rl-hero__intro">
               <p>A full-service, social-first marketing agency. We build brands through creative direction, content, social media, branding and websites.</p>
-              <SmartLink className="project-cta" href="/contact">Start a project</SmartLink>
+              <SmartLink className="rl-link" href="/contact">Start a project <i>↗︎</i></SmartLink>
             </div>
           </div>
         </div>
@@ -600,7 +600,7 @@ export function ReferenceLedHome() {
         <div className="rl-contact__mouth" aria-hidden="true"><ResponsiveImage src="/assets/cp-halftone-mouths-v2.webp" sizes="100vw" alt="" /><i /></div>
         <span className="rl-label">05 / Contact</span>
         <h2 id="rl-contact-title">Tell us about<br />the project.</h2>
-        <SmartLink className="project-cta" href="/contact">Start a project</SmartLink>
+        <SmartLink href="/contact">Start a project <i>↗︎</i></SmartLink>
         <div className="rl-contact__details"><span>Lagos / working worldwide</span><span>Creative direction / Content + SMM / Branding / Websites</span><a href={contactUrl} target="_blank" rel="noopener noreferrer">{contactLabel}</a></div>
       </section>
     </div>
