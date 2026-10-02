@@ -220,6 +220,7 @@ function Header() {
             ))}
           </nav>
           <div className="header-actions">
+          {pathname !== "/contact" && <SmartLink className="project-cta project-cta--header" href="/contact">Start a project</SmartLink>}
           <button ref={buttonRef} className="menu-button" type="button" aria-expanded={open} aria-controls="site-index" onClick={() => setOpen(!open)}>
             <span className="sr-only">{open ? "Close menu" : "Open menu"}</span>
             <span className="menu-button__label">{open ? "Close" : "Index"}</span><i aria-hidden="true" /><b aria-hidden="true" />
